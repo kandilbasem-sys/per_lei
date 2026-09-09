@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Per Te 💙 | Il Nostro Viaggio</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body>
+
+  <!-- Canvas Sfondo Particelle / Glow -->
+  <canvas id="bg-canvas"></canvas>
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <!-- FASE 0: SCHERMATA INIZIALE -->
+  <div id="start-screen" class="start-screen" onclick="startJourney()">
+    <div class="start-card">
+      <div class="glow-heart-container">
+        <div class="glow-heart">💙</div>
+        <div class="heart-pulse-ring"></div>
+      </div>
+      <h1 class="main-title">Il Nostro Viaggio</h1>
+      <p class="sub-title">Un percorso fatto di momenti indimenticabili</p>
+      
+      <div class="tap-hint">
+        <span class="sparkle">✨</span>
+        <span>Tocca ovunque per iniziare</span>
+        <span class="sparkle">✨</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FASE 1: VIAGGIO INTERATTIVO -->
+  <div id="journey-overlay" class="journey-overlay hidden" onclick="handleScreenTap(event)">
+    <div class="journey-header">
+      <div class="journey-progress-track">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+      <span class="tap-indicator">Tocca per continuare ➔</span>
+    </div>
+
+    <div class="journey-card-container">
+      <div class="journey-card" id="journey-card">
+        <div class="journey-badge" id="j-badge">Tappa 1 di 4</div>
+        
+        <div class="journey-media">
+          <img id="j-img" src="FOTO_1.JPG" alt="Ricordo">
+          <div class="img-overlay-glow"></div>
+        </div>
+
+        <div class="journey-text">
+          <h2 id="j-title">Il Primo Sguardo 💙</h2>
+          <span id="j-date" class="j-date">15 Settembre</span>
+          <p id="j-desc">
+            Il giorno in cui tutto è iniziato senza che ce ne rendessimo conto. Uno sguardo, un sorriso e l'inizio di qualcosa di speciale.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FASE 2: DASHBOARD FINALE -->
+  <div id="main-dashboard" class="dashboard-container hidden">
+
+    <!-- Header & Counter -->
+    <header class="app-header">
+      <div class="badge-glow">
+        <span class="dot"></span>
+        <span>I Nostri Ricordi Insieme</span>
+      </div>
+      <h1 class="glow-title">Insieme Nel Tempo</h1>
+      
+      <div class="counter-card">
+        <div class="time-block">
+          <span id="days">00</span>
+          <label>GIORNI</label>
+        </div>
+        <div class="time-sep">:</div>
+        <div class="time-block">
+          <span id="hours">00</span>
+          <label>ORE</label>
+        </div>
+        <div class="time-sep">:</div>
+        <div class="time-block">
+          <span id="minutes">00</span>
+          <label>MINUTI</label>
+        </div>
+        <div class="time-sep">:</div>
+        <div class="time-block">
+          <span id="seconds">00</span>
+          <label>SECONDI</label>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-center">
+      <div class="nav-pills">
+        <button class="pill-btn active" onclick="switchTab('storia', this)">
+          <span class="icon">✨</span> Viaggio
+        </button>
+        <button class="pill-btn" onclick="switchTab('foto', this)">
+          <span class="icon">📸</span> Galleria
+        </button>
+        <button class="pill-btn" onclick="switchTab('mappa', this)">
+          <span class="icon">📍</span> Mappa
+        </button>
+        <button class="pill-btn" onclick="switchTab('lettere', this)">
+          <span class="icon">✉️</span> Lettere
+        </button>
+        <button class="pill-btn" onclick="switchTab('chat', this)">
+          <span class="icon">💬</span> Chat
+        </button>
+        <button class="pill-btn" onclick="switchTab('musica', this)">
+          <span class="icon">🎵</span> Musica
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main Grid Content -->
+    <div class="main-grid">
+
+      <!-- Timeline Sidebar -->
+      <aside class="timeline-bar">
+        <div class="timeline-header">
+          <h3>Tappe del Cuore</h3>
+          <p>Seleziona un momento</p>
+        </div>
+
+        <div class="timeline-track">
+          <div class="step-card active" onclick="selectSummaryStep(0)">
+            <div class="step-num">01</div>
+            <div class="step-meta">
+              <span class="step-tag">L'INIZIO</span>
+              <p>Primo incontro</p>
+            </div>
+          </div>
+          <div class="step-card" onclick="selectSummaryStep(1)">
+            <div class="step-num">02</div>
+            <div class="step-meta">
+              <span class="step-tag">MESSAGGI</span>
+              <p>Le prime chat</p>
+            </div>
+          </div>
+          <div class="step-card" onclick="selectSummaryStep(2)">
+            <div class="step-num">03</div>
+            <div class="step-meta">
+              <span class="step-tag">MUSICA</span>
+              <p>La nostra canzone</p>
+            </div>
+          </div>
+          <div class="step-card" onclick="selectSummaryStep(3)">
+            <div class="step-num">04</div>
+            <div class="step-meta">
+              <span class="step-tag">OGGI</span>
+              <p>Sempre insieme</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Content Views -->
+      <main class="content-display">
+
+        <!-- Tab 1: Riepilogo Storia -->
+        <section id="storia" class="tab-pane active">
+          <div class="showcase-card">
+            <div class="showcase-media">
+              <img id="summary-img" src="FOTO_1.JPG" alt="Foto ricordo">
+              <div class="img-gradient"></div>
+            </div>
+            <div class="showcase-details">
+              <span class="showcase-date" id="summary-date">15 Settembre</span>
+              <h2 id="summary-title">Il Primo Sguardo 💙</h2>
+              <p id="summary-desc">Il giorno in cui tutto è iniziato...</p>
+              <button class="control-btn primary" onclick="replayJourney()">
+                <span>🔄 Rivivi il viaggio interattivo</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 2: Galleria Foto -->
+        <!-- Tab 2: Galleria Foto -->
+        <section id="foto" class="tab-pane">
+          
+          <!-- Banner Dedica Bellezza -->
+          <div class="beauty-dedication-card glass-box" style="margin-bottom: 25px; text-align: center; padding: 20px; border: 1px solid rgba(56, 189, 248, 0.3); background: rgba(15, 23, 42, 0.6); border-radius: 16px;">
+            <span style="font-size: 1.5rem; display: block; margin-bottom: 8px;">✨ 📸 ✨</span>
+            <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.3rem; color: #f8fafc; margin-bottom: 8px; font-weight: 700;">
+              Guarda queste foto e ricordati sempre una cosa:
+            </h3>
+            <p style="font-size: 1rem; color: #38bdf8; font-weight: 600; line-height: 1.5; font-style: italic; margin: 0;">
+              "Non importa quale angolazione o quale luce ci sia: la tua bellezza è qualcosa di unico, e queste foto ne sono solo una piccola prova. Non dimenticarti mai quanto sei meravigliosa. 💙"
+            </p>
+          </div>
+
+          <div class="upload-bar">
+            <label for="photo-input" class="upload-btn">
+              <span class="btn-icon">📷</span>
+              <span>Aggiungi un nuovo ricordo</span>
+            </label>
+            <input type="file" id="photo-input" accept="image/*" capture="environment" style="display: none;" onchange="addNewPhoto(event)">
+          </div>
+
+          <div class="photo-grid" id="photo-grid">
+            <div class="photo-card"><img src="FOTO_4.JPG" alt="Ricordo 4"><div class="card-glow"></div></div>
+            <div class="photo-card"><img src="FOTO_5.JPG" alt="Ricordo 5"><div class="card-glow"></div></div>
+            <div class="photo-card"><img src="FOTO_9.JPG" alt="Ricordo 9"><div class="card-glow"></div></div>
+            
+            <!-- Card con Citazione Integrata nella Griglia -->
+            <div class="photo-card quote-card" style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(15, 23, 42, 0.8)); display: flex; align-items: center; justify-content: center; padding: 20px; text-align: center; border: 1px dashed rgba(56, 189, 248, 0.4);">
+              <p style="font-size: 0.95rem; color: #e2e8f0; font-weight: 500; margin: 0;">
+                Sei incredibile in ogni singolo scatto. 💙
+              </p>
+            </div>
+
+            <div class="photo-card"><img src="FOTO_1.JPG" alt="Ricordo 1"><div class="card-glow"></div></div>
+            <div class="photo-card"><img src="FOTO_2.JPG" alt="Ricordo 2"><div class="card-glow"></div></div>
+            <div class="photo-card"><img src="FOTO_8.JPG" alt="Ricordo 8"><div class="card-glow"></div></div>
+            <div class="photo-card"><img src="FOTO_3.JPG" alt="Ricordo 3"><div class="card-glow"></div></div>
+          </div>
+        </section>
+
+        <!-- Tab 3: Mappa -->
+        <section id="mappa" class="tab-pane">
+          <div class="glass-box empty-state">
+            <div class="state-icon">📍</div>
+            <h3>I Nostri Luoghi Speciali</h3>
+            <p>Seleziona un punto sulla mappa per riaprire i ricordi legati a quel posto.</p>
+          </div>
+        </section>
+
+        <!-- Tab 4: Lettere Interattive -->
+        <!-- Tab 4: Lettere Interattive -->
+        <!-- Tab 4: Lettere Interattive -->
+        <section id="lettere" class="tab-pane">
+          
+          <div class="letter-editor glass-box">
+            <h3>Scrivi un pensiero ✍️</h3>
+            <input type="text" id="letter-title-input" placeholder="Titolo della lettera..." class="custom-input">
+            <textarea id="letter-body-input" placeholder="Scrivi qui i tuoi pensieri..." class="custom-textarea"></textarea>
+            <button class="control-btn primary" onclick="saveLetter()">
+              <span>📩 Custodisci questo pensiero</span>
+            </button>
+          </div>
+
+          <div class="letters-list" id="letters-list">
+            
+            <!-- BUSTA / LETTERA APRIBILE DI ANNIVERSARIO -->
+            <div class="letter-envelope glass-box" id="anniversary-envelope" onclick="toggleLetter(this)" style="border: 1px solid rgba(56, 189, 248, 0.4); background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(14, 165, 233, 0.12)); padding: 20px; border-radius: 18px; margin-top: 20px; cursor: pointer; transition: all 0.3s ease;">
+              
+              <!-- Header sempre visibile -->
+              <div class="letter-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span class="envelope-icon" style="font-size: 1.5rem; transition: transform 0.3s ease;">✉️</span>
+                  <div>
+                    <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.2rem; color: #38bdf8; font-weight: 700; margin: 0;">
+                      Lettera di Anniversario 💙
+                    </h3>
+                    <p style="font-size: 0.82rem; color: #94a3b8; margin: 2px 0 0 0;">Clicca per aprire la lettera</p>
+                  </div>
+                </div>
+                <span class="letter-date" style="font-size: 0.85rem; color: #38bdf8; font-weight: 600; background: rgba(56, 189, 248, 0.1); padding: 4px 10px; border-radius: 20px;">1 Marzo 2026</span>
+              </div>
+
+              <!-- Contenuto Nascosto (si apre al click) -->
+              <div class="letter-body-expandable" style="max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease, margin-top 0.3s ease;">
+                <div class="letter-content" style="font-size: 0.95rem; color: #e2e8f0; line-height: 1.7; white-space: pre-line; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+Beh oggi è l’1 marzo 2026, 1 anno da quando ci siamo messi insieme. È passato così veloce il tempo che non me ne sono accorto e purtroppo ora non stiamo insieme, non perché non voglio... anche perché tutti e due vorremmo tantissimo stare assieme in questo momento, ma per alcuni motivi per ora è meglio così. 
+
+Mi ricordo benissimo quel giorno, precisamente quel sabato mattina in cui ti ho chiesto di metterci insieme non sapendo che da quel giorno la mia vita sarebbe cambiata, ovviamente positivamente perché io ti amo. Mai mi sarei aspettato di mettermi con te prima, perché per me sei sempre stata quella ragazza bellissima, anzi la più bella di tutte, che sicuramente non mi avrebbe voluto. Ma vabbè, alla fine ho capito che anch’io posso essere amato, visto che non ero mai stato insieme a nessuno prima di te. 
+
+Io già ero follemente innamorato di te, poi quando abbiamo iniziato a parlarci mi sono innamorato ancora di più. Ti amavo già da prima che diventassimo migliori amici a ottobre 2024, ma per la timidezza non lo dimostravo tanto. I mesi insieme a te sono stati i mesi migliori della mia vita, e per questo vorrei stare con te per tutta la vita e superare ogni singolo ostacolo insieme. 
+
+Vorrei da grande dire ai nostri figli (Alessio e Nicolle) che la loro mamma e il loro papà si sono amati dalla terza media e che non si sono mai veramente separati, perché anche se litigavano ritornavano uno dall’altro e si perdonavano. 
+
+Ale, io vorrei troppo stare con te in questo momento e passare gli stessi momenti che abbiamo sempre passato insieme, perché erano i miei giorni preferiti. Ma forse è meglio aspettare un po’ perché non vorrei fosse presto e per poi sbagliare. Quindi Ale, dopo un anno che ci siamo messi insieme ti dico: ti amo! 💙💙💙💙
+
+E con questo, anche se non stiamo insieme, BUON ANNIVERSARIO! 💙💙💙💙
+
+Avrei troppo voluto dirtelo mentre stavamo insieme per fare veramente un anno di relazione, ma Ale io voglio cominciare da capo con te. Lo so che sarà difficile, ma non voglio più fare gli stessi errori di prima e quindi voglio ricominciare da 0, da quando ci siamo messi insieme quel sabato mattina.
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Tab 5: Chat (Stile Glassmorphism Premium) -->
+        <section id="chat" class="tab-pane">
+          <div class="chat-glass-container">
+            
+            <!-- Header Chat -->
+            <div class="chat-header-glass">
+              <div class="chat-user-profile">
+                <div class="avatar-glow">
+                  <img src="FOTO_1.JPG" alt="Foto Profilo" class="profile-img">
+                  <span class="status-pulse"></span>
+                </div>
+                <div>
+                  <h4 class="chat-title">I Nostri Ricordi 💙</h4>
+                  <span class="chat-subtitle">Noi insieme</span>
+                </div>
+              </div>
+              <div class="badge-chat">I Nostri Ricordi</div>
+            </div>
+
+            <!-- Feed Messaggi -->
+            <div class="chat-feed" id="chat-feed-container">
+              
+              <div class="chat-date-tag"><span>15 SETTEMBRE</span></div>
+
+              <!-- MESSAGGI REALI -->
+              <div class="msg-row sent">
+                <div class="msg-bubble-glass">
+                  <p>buonanotteeee amoremiooo 💙💙💙</p>
+                  <span class="msg-time">23:42 <span class="blue-tick">✓✓</span></span>
+                </div>
+              </div>
+
+              <div class="msg-row received">
+                <div class="msg-bubble-glass">
+                  <p>buonanotteeee amoremiooo 💙💙💙💙</p>
+                  <span class="msg-time">23:43</span>
+                </div>
+              </div>
+
+              <div class="msg-row sent">
+                <div class="msg-bubble-glass">
+                  <p>Sei la cosa più bella che mi potesse capitare ✨</p>
+                  <span class="msg-time">23:45 <span class="blue-tick">✓✓</span></span>
+                </div>
+              </div>
+
+              <div class="msg-row received">
+                <div class="msg-bubble-glass">
+                  <p>Anche tu per me, non sai quanto sono felice con te 🥹💙</p>
+                  <span class="msg-time">23:46</span>
+                </div>
+              </div>
+
+              <div class="msg-row sent">
+                <div class="msg-bubble-glass media-card">
+                  <img src="FOTO_2.JPG" alt="Foto Insieme" class="msg-photo">
+                  <p>Guarda quanto eravamo belli qui 📸💙</p>
+                  <span class="msg-time">23:48 <span class="blue-tick">✓✓</span></span>
+                </div>
+              </div>
+
+              <div class="msg-row received">
+                <div class="msg-bubble-glass">
+                  <p>Sempre insieme amoremio 🫂💙</p>
+                  <span class="msg-time">23:50</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Input Bar -->
+            <div class="chat-input-glass">
+              <input type="text" id="chat-text-input" placeholder="Scrivi un messaggio per lei..." onkeydown="handleChatSubmit(event)">
+              <button class="send-glass-btn" onclick="sendChatMessage()">
+                <span>Invia ➔</span>
+              </button>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Tab 6: Musica -->
+        <section id="musica" class="tab-pane">
+          <div class="music-playlist-container" style="display: flex; flex-direction: column; gap: 20px;">
+            
+            <!-- Canzone 1 -->
+            <div class="music-player-card glass-box">
+              <div class="disc-animation">
+                <div class="disc"></div>
+              </div>
+              <div class="music-info">
+                <span class="music-tag">La nostra colonna sonora #1</span>
+                <h3>in_mezzo_ai_guai</h3>
+                <p>Neima Ezza</p>
+              </div>
+              <audio controls src="in_mezzo_ai_guai.mp3" class="custom-audio"></audio>
+            </div>
+
+            <!-- Canzone 2 -->
+            <div class="music-player-card glass-box">
+              <div class="disc-animation">
+                <div class="disc"></div>
+              </div>
+              <div class="music-info">
+                <span class="music-tag">La nostra colonna sonora #2</span>
+                <h3>anche_stasera</h3>
+                <p>Sfera Ebbasta, Elodie</p>
+              </div>
+              <audio controls src="anche_stasera.mp3" class="custom-audio"></audio>
+            </div>
+
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
